@@ -1,0 +1,23 @@
+<div id="inequalities" style="overflow:hidden">
+<div id="left_inequality" style="float:left; padding-right: 20px">
+    <form action="handler.php">
+        <p>{{view Ember.Select
+           multiple="true"
+           content=model.historyInequalities
+           optionValuePath="content.id"
+           optionLabelPath="content.inequality"}}</p>
+    </form>
+</div>
+<div id="right_inequality">
+    <form action="handler.php">
+        <p>{{view Ember.Select
+           multiple="true"
+           content=model.workInequalities
+           optionValuePath="content.id"
+           optionLabelPath="content.inequality"
+           selectionBinding="model.selectedInequalities"}}</p>
+        <input type='submit' value="Удалить" {{bind-attr class="model.selectedInequalitiesProperty::hide"}} {{action 'deleteInequality'}}/>
+    </form>
+</div>
+</div>
+{{log model.selectedInequalitiesProperty}}

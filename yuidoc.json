@@ -1,0 +1,10 @@
+{
+    "name": "brunch-with-ember-and-bootstrap",
+    "description": "Brunch.io skeleton with Ember and Bootstrap",
+    "version": "0.0.0",
+    "url": "https://github.com/huafu/brunch-with-ember-and-bootstrap",
+    "options": {
+        "outdir": "apidocs",
+        "linkNatives": true
+    }
+}

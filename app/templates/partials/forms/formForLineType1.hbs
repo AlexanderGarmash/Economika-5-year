@@ -1,0 +1,15 @@
+<form id="type_1" style="display: none">
+<label for="input_a_1">A:</label>
+{{input id="input_a_1" value=model.newLine.A}}
+<label for="input_c_1">C:</label>
+{{input id="input_c_1" value=model.newLine.C}}
+<label for="input_sign_1">Знак:</label>
+{{view Ember.Select
+	content=model.signTypeList
+	optionValuePath="content"
+	optionLabelPath="content"
+	selectionBinding="model.newLine.sign"
+}}
+<br/>
+<input type="submit" {{action 'addLine' '1' target=model}}/>
+</form>
