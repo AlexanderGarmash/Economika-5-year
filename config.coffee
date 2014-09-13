@@ -40,6 +40,7 @@ exports.config =
           "vendor#{DIR_SEP}scripts#{DIR_SEP}ember-data.dev.js"
           "vendor#{DIR_SEP}scripts#{DIR_SEP}ember-data.prod.js"
           "vendor#{DIR_SEP}scripts#{DIR_SEP}bootstrap#{DIR_SEP}tooltip.js"
+          "vendor#{DIR_SEP}scripts#{DIR_SEP}localstorage_adapter.js"
         ]
         after: [
           "vendor#{DIR_SEP}scripts#{DIR_SEP}ember-bootstrap.js"

@@ -2,3 +2,4 @@
 # Example:
 # `scaffolt route user`
 require 'routes/Index'
+require 'routes/EditInequalities'

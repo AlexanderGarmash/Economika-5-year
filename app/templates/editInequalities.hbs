@@ -1,0 +1,22 @@
+<h2>Редактировать уравнения</h2>
+{{#if controller.targetInequalities}}
+	{{#each item in controller.targetInequalities}}
+		<form id="type_3">
+		    <label>A:</label>
+		    {{input valueBinding='item.A'}}
+		    <label>B:</label>
+		    {{input valueBinding='item.B'}}
+		    <label>C:</label>
+		    {{input valueBinding='item.C'}}
+		    <label>Знак:</label>
+		    {{view Ember.Select
+		        content=controller.controllers.index.signTypeList
+		        optionValuePath="content"
+		        optionLabelPath="content"
+		        selectionBinding="item.sign"
+		    }}
+		    <br/>
+		</form>
+	{{/each}}
+{{/if}}
+<input type="submit" {{action 'save'}}/>

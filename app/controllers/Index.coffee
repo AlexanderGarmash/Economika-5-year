@@ -14,6 +14,7 @@ module.exports = App.IndexController = Ember.ObjectController.extend
     @property content
     @type Object
   ###
+  needs: ["application"]
   content: null
   newLine: App.LinePrototype.create()
   signTypeList: Ember.A(['<=', '>=', '='])
@@ -25,7 +26,9 @@ module.exports = App.IndexController = Ember.ObjectController.extend
   selectedInequalities: null
 
   linesObserver:(()->
-    @plotLines()
+    if this.get('controllers.application.currentPath') is "index"
+      @plotLines()
+    return
   ).observes('lines.@each')
 
   selectedInequalitiesProperty: (()->
@@ -56,6 +59,11 @@ module.exports = App.IndexController = Ember.ObjectController.extend
       @get('workInequalities').removeObjects(resultInequalities)
       @get('lines').removeObjects(resultLines)
     )
+
+    editInequalities:()->
+      self = @
+      @transitionToRoute 'editInequalities', {queryParams:{inequalityIdList:@get('selectedInequalities').mapBy('id')}}
+
 
     clearAll:()->
       window.location = '/'

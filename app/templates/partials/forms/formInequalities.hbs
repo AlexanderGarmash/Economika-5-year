@@ -17,6 +17,7 @@
            optionLabelPath="content.inequality"
            selectionBinding="model.selectedInequalities"}}</p>
         <input type='submit' value="Удалить" {{bind-attr class="model.selectedInequalitiesProperty::hide"}} {{action 'deleteInequality'}}/>
+        <input type='submit' value="Редактировать" {{bind-attr class="model.selectedInequalitiesProperty::hide"}} {{action 'editInequalities'}}/>
     </form>
 </div>
 </div>

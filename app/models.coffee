@@ -3,3 +3,4 @@
 # `scaffolt model user`
 require 'models/LinePrototype'
 require 'models/IdGenerator'
+require 'models/Line'

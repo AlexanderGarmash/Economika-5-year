@@ -4,3 +4,4 @@
 # `scaffolt objectcontroller user`
 # `scaffolt arraycontroller user`
 require 'controllers/Index'
+require 'controllers/EditInequalities'
