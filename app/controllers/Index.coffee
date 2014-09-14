@@ -24,6 +24,8 @@ module.exports = App.IndexController = Ember.ObjectController.extend
   historyInequalities: Ember.A([])
   workInequalities: Ember.A([])
   selectedInequalities: null
+  targetFunction: null
+  targetFunctionLine: null
 
   linesObserver:(()->
     if this.get('controllers.application.currentPath') is "index"
@@ -36,6 +38,14 @@ module.exports = App.IndexController = Ember.ObjectController.extend
       return yes
     return no  
   ).property('selectedInequalities.@each')
+
+  isTargetFunctionApplied:(()->
+    if @get('targetFunction')?
+      @plotTargetFunction()
+      return yes
+    @removeTargetFunction()
+    return no
+  ).property('targetFunction', 'targetFunction.C', 'targetFunction.A', 'targetFunction.B')
 
   actions:
     addLine:((type)->
@@ -67,6 +77,20 @@ module.exports = App.IndexController = Ember.ObjectController.extend
 
     clearAll:()->
       window.location = '/'
+
+    applyTargetFunction:()->
+      self = @
+      targetFunction = App.LinePrototype.create()
+      targetFunction.set 'A', 1
+      targetFunction.set 'B', 1
+      targetFunction.set 'C', 1
+      targetFunction.computeCoordinates(1,1,1)
+      @set('targetFunction', targetFunction)
+
+    deleteTargetFunction:()->
+      self = @
+      @set('targetFunction', null)
+
 
   clearTemporyValues: ()->
     @set 'newLine', null
@@ -183,6 +207,45 @@ module.exports = App.IndexController = Ember.ObjectController.extend
         fillColor: "white"
         fillOpacity: 100
       )
+  )
+
+  plotTargetFunction: (()->
+    self = @
+    # @plotLines()
+    @removeTargetFunction()
+    A = @get 'targetFunction.A'
+    B = @get 'targetFunction.B'
+    C = @get 'targetFunction.C'
+    @get('targetFunction').computeCoordinates(A, B, C)
+    p = board.create("point", [
+        @get('targetFunction').get('X1')
+        @get('targetFunction').get('Y1')
+      ],
+      visible: false
+    )
+    q = board.create("point", [
+      @get('targetFunction').get('X2')
+      @get('targetFunction').get('Y2')
+    ],
+      visible: false
+    )
+    l = board.create("line", [
+      p
+      q
+    ],
+      fixed: true
+      strokeWidth: 1
+    )
+    @set 'targetFunctionLine', l
+    board.update()
+  )
+
+  removeTargetFunction: (()->
+    self = @
+    targetLine = @get 'targetFunctionLine'
+    if targetLine? and targetLine.remove?
+      targetLine.remove()
+      self.set 'targetFunctionLine', null
   )
 
   generatePreview: () ->

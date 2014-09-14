@@ -4,3 +4,4 @@
 require 'models/LinePrototype'
 require 'models/IdGenerator'
 require 'models/Line'
+require 'models/Gauss'

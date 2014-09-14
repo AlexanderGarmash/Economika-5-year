@@ -1,8 +1,8 @@
 <form id="type_2" style="display: none">
 <label for="input_b_2">B:</label>
-{{input id="input_b_2" value=model.newLine.B}}
+{{input id="input_b_2" value=model.newLine.B size=3}}
 <label for="input_c_2">C:</label>
-{{input id="input_c_2" value=model.newLine.C}}
+{{input id="input_c_2" value=model.newLine.C size=3}}
 <label for="input_sign_2">Знак:</label>
 {{view Ember.Select
 	content=model.signTypeList
@@ -11,5 +11,5 @@
 	selectionBinding="model.newLine.sign"
 }}
 <br/>
-<input type="submit" {{action 'addLine' '2' target=model}}/>
+<input type="submit" {{action 'addLine' '2' target=model}} value="Добавить"/>
 </form>

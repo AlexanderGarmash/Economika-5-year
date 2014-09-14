@@ -16,6 +16,10 @@ module.exports = App.IndexRoute = Ember.Route.extend
   ###
   model: (params) ->
     console.log "S;LDGVJNLSNF"
+    gauss = App.Gauss.create()
+    matrix = [[1, -1, -5],[2, 1, -7]]
+    result = gauss.solve(matrix)
+    console.log "Solved: ", result
     Ember.A([])
 
   setupController: (controller, model) ->

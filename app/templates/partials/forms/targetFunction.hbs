@@ -1,0 +1,16 @@
+<div id="blablabla" style="overflow:hidden" >
+    <form id="type_3" {{bind-attr class="model.isTargetFunctionApplied::hide"}}>
+    <label>A:</label>
+    {{input value=model.targetFunction.A size=3}}
+    <label>B:</label>
+    {{input value=model.targetFunction.B size=3}}
+    <br/>
+    <label>C:</label>
+    {{input type="range" min="0" max="1000" step=".01" value=model.targetFunction.C}}
+    {{input value=model.targetFunction.C size=6}}
+    {{!-- {{input type="number" value=model.targetFunction.C size="3"}} --}}
+</form>
+    <input type="submit" value="Применить ЦФ" {{action 'applyTargetFunction'}} {{bind-attr class="model.isTargetFunctionApplied:hide:"}}>
+    <input type="submit" value="Удалить ЦФ" {{action 'deleteTargetFunction'}} {{bind-attr class="model.isTargetFunctionApplied::hide"}}>
+    {{!-- <a href=""{{action 'clearAll'}}>Очистить</a> --}}
+</div>

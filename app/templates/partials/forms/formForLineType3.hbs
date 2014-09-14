@@ -1,10 +1,10 @@
 <form id="type_3">
     <label for="input_a_3">A:</label>
-    {{input id="input_a_3" value=model.newLine.A}}
+    {{input id="input_a_3" value=model.newLine.A size=3}}
     <label for="input_b_3">B:</label>
-    {{input id="input_b_3" value=model.newLine.B}}
+    {{input id="input_b_3" value=model.newLine.B size=3}}
     <label for="input_c_3">C:</label>
-    {{input id="input_c_3" value=model.newLine.C}}
+    {{input id="input_c_3" value=model.newLine.C size=3}}
     <label for="input_sign_3">Знак:</label>
     {{view Ember.Select
         content=model.signTypeList
@@ -13,5 +13,5 @@
         selectionBinding="model.newLine.sign"
     }}
     <br/>
-    <input type="submit" {{action 'addLine' '3' target=model}}/>
+    <input type="submit" {{action 'addLine' '3' target=model}} value="Добавить"/>
 </form>
