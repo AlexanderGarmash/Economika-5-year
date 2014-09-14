@@ -22,6 +22,8 @@ module.exports = App.IndexView = Ember.View.extend
 
   afterRenderEvent: ->
     @get('controller').generatePreview()
+    if @get('controller.lines.length')? and @get('controller.lines.length') > 0
+      @get('controller').plotLines()
     return
     
   change:(event, view)->
