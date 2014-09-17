@@ -24,7 +24,3 @@ module.exports = App.IndexRoute = Ember.Route.extend
 
   setupController: (controller, model) ->
     @_super arguments...
-    # lines = controller.get('lines')
-    # controller.set 'lines', null
-    # controller.set 'lines', Ember.A([])
-    # controller.get('lines').pushObjects(lines)

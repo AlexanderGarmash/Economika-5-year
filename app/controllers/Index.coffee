@@ -19,6 +19,9 @@ module.exports = App.IndexController = Ember.ObjectController.extend
   newLine: App.LinePrototype.create()
   signTypeList: Ember.A(['<=', '>=', '='])
   lines: Ember.A([])
+  jsxLines: Ember.A([])
+  points: Ember.A([])
+  axies: Ember.Object.create({x: null, y: null})
   isFilled: no
   generator: App.IdGenerator.create()
   historyInequalities: Ember.A([])
@@ -90,6 +93,16 @@ module.exports = App.IndexController = Ember.ObjectController.extend
     deleteTargetFunction:()->
       self = @
       @set('targetFunction', null)
+      @get('points').forEach (obj)->
+        obj.remove()
+      @get('points').clear()
+
+    findOptimalSolution: ()->
+      self = @
+      gauss = App.Gauss.create()
+      gauss.findOptimalSolutionUsingLine(@get('jsxLines'), @get('targetFunctionLine'), @get('axies.x'), @get('axies.y'), @get('lines'), @get('targetFunction'), @get('points'))
+      # gauss.findOptimalSolution(@get('lines'), @get('targetFunction'))
+
 
 
   clearTemporyValues: ()->
@@ -101,6 +114,7 @@ module.exports = App.IndexController = Ember.ObjectController.extend
     @clearBoard()
     board = window.board
     i = 0
+    @get('jsxLines').clear()
     while i < @get('lines').length
       p = board.create("point", [
         @get('lines')[i].get('X1')
@@ -121,6 +135,7 @@ module.exports = App.IndexController = Ember.ObjectController.extend
         fixed: true
         strokeWidth: 1
       )
+      @get('jsxLines').pushObject(l)
       board.update()
       ineq = null
       if @get('lines')[i].getNumberSign()?
@@ -199,6 +214,8 @@ module.exports = App.IndexController = Ember.ObjectController.extend
         strokeColor: "black"
         strokeWidth: 1
       )
+      @set 'axies.x', x
+      @set 'axies.y', y
       ineq = board.create("inequality", [x],
         fillColor: "white"
         fillOpacity: 100
@@ -207,6 +224,7 @@ module.exports = App.IndexController = Ember.ObjectController.extend
         fillColor: "white"
         fillOpacity: 100
       )
+      @plotLyaout()
   )
 
   plotTargetFunction: (()->
@@ -269,3 +287,40 @@ module.exports = App.IndexController = Ember.ObjectController.extend
     window.board = board
     @set 'isFilled', no
     board
+
+  plotLyaout: ()->
+    board = window.board
+    i = 1
+    while i <= 10
+      board.create "line", [
+        [
+          i
+          -0.05
+        ]
+        [
+          i
+          0.05
+        ]
+      ],
+        straightFirst: false
+        straightLast: false
+        strokeWidth: 1
+      i++
+    i = 1
+    while i <= 10
+      board.create "line", [
+        [
+          -0.05
+          i
+        ]
+        [
+          0.05
+          i
+        ]
+      ],
+        straightFirst: false
+        straightLast: false
+        strokeWidth: 1
+        strokeColor: "black"
+      i++
+

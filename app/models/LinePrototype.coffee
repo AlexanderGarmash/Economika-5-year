@@ -31,9 +31,9 @@ module.exports = App.LinePrototype = Ember.Object.extend
   computeCoordinates:((A,B,C)->
     if A? and B? and A isnt 0 and B isnt 0
       @set 'X1', 5
-      @set 'Y1', (-A / B * @get('X1') + C / A)
+      @set 'Y1', (-A / B * @get('X1') + C / B)
       @set 'X2', 0
-      @set 'Y2', (-A / B * @get('X2') + C / A)
+      @set 'Y2', (-A / B * @get('X2') + C / B)
     else if A is 0
       @set 'X1', C/B
       @set 'Y1', 1
