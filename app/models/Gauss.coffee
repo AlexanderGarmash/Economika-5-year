@@ -119,7 +119,7 @@ module.exports = App.Gauss = Ember.Object.extend
           window.board.removeObject(intersection)
     @removeRepeated(intersections)
     @checkPointsInInequalities(intersections, inequalities)
-    tf = @findOptimalSolution(inequalities, targetFunctionInequality, intersections, lineList)
+    tf = @findOptimalSolution(inequalities, targetFunctionInequality, intersections, lineList, type)
     console.log "End"
     return tf
 
@@ -232,14 +232,14 @@ module.exports = App.Gauss = Ember.Object.extend
       if(isOptimal)
         pointX = point.X()
         tfY = ((-tfA / tfB * pointX) + (tfC / tfB))
-        tfY += 0.000001
+        tfY -= 0.000001
         if point.Y() < tfY
           isOptimal = no
         return
       return
     isOptimal
 
-  findOptimalSolution: (inequalities, targetFunctionInequality, points, lineList)->
+  findOptimalSolution: (inequalities, targetFunctionInequality, points, lineList, type)->
     self = @
     isOptimal = yes
     targetFunction = null
@@ -260,7 +260,10 @@ module.exports = App.Gauss = Ember.Object.extend
       tf.set 'B', tfB
       tf.set 'C', tfC
       tf.computeCoordinates(tfA, tfB, tfC)
-      isOptimal = self.checkTargetFunctionOnOptimalMax(tf, points)
+      if(type is "max")
+        isOptimal = self.checkTargetFunctionOnOptimalMax(tf, points)
+      else if (type is "min")
+        isOptimal = self.checkTargetFunctionOnOptimalMin(tf, points)
       if(isOptimal)
         @set 'pointOptimalSolution', point
         return tf
