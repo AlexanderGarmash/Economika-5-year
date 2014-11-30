@@ -9,6 +9,11 @@
     {{input type="range" min="0" max="1000" step=".01" value=model.targetFunction.C}}
     {{input value=model.targetFunction.C size=6}}
     {{!-- {{input type="number" value=model.targetFunction.C size="3"}} --}}
+    <p>{{view Ember.Select
+           content=model.tfTypes
+           optionValuePath="content.type"
+           optionLabelPath="content.type"
+           selectionBinding=tfType}}</p>
 </form>
     <input type="submit" value="Применить ЦФ" {{action 'applyTargetFunction'}} {{bind-attr class="model.isTargetFunctionApplied:hide:"}}>
     <input type="submit" value="Удалить ЦФ" {{action 'deleteTargetFunction'}} {{bind-attr class="model.isTargetFunctionApplied::hide"}}>

@@ -8,6 +8,9 @@ App = require 'app'
   @extends DS.Model
 ###
 module.exports = App.Gauss = Ember.Object.extend
+
+  pointOptimalSolution: null
+
   solve: (A) ->
     n = A.length
     i = 0
@@ -63,7 +66,7 @@ module.exports = App.Gauss = Ember.Object.extend
       i--
     x
 
-  findOptimalSolution: (inequalityList, targetFunction)->
+  findOptimalSolutionOld: (inequalityList, targetFunction)->
     inequalityList = Ember.A(inequalityList)
     self = @
     result = Ember.A([])
@@ -97,7 +100,7 @@ module.exports = App.Gauss = Ember.Object.extend
           if (res[0] > 0 and res[1] > 0)
             result.pushObject(Ember.Object.create({x: res[0], y:res[1]}))
 
-  findOptimalSolutionUsingLine: (lineList, targetFunctionLine, x, y, inequalities, targetFunctionInequality, points)->
+  findOptimalSolutionUsingLine: (lineList, targetFunctionLine, x, y, inequalities, targetFunctionInequality, points, type)->
     lineList = Ember.A(lineList)
     lineList.pushObject(x)
     lineList.pushObject(y)
@@ -114,23 +117,11 @@ module.exports = App.Gauss = Ember.Object.extend
         else
           intersection.remove()
           window.board.removeObject(intersection)
-        
-    
-    # filteredIntersections = Ember.A([])
-    # i = 0
-    # while i < intersections.length
-    #   current = intersections[i++]
-    #   j = 0
-    #   while j < intersections.length
-    #     obj = intersections[j++]
-    #     if ((current.id isnt obj.id) and (current.X() is obj.X()) and (current.Y() is obj.Y()))
-    #       obj.remove()
-    #       intersections.removeObject(obj)
     @removeRepeated(intersections)
     @checkPointsInInequalities(intersections, inequalities)
-    @getIntersectionWithTargetFunctionAndOtherLines(inequalities, targetFunctionInequality, intersections, lineList)
+    tf = @findOptimalSolution(inequalities, targetFunctionInequality, intersections, lineList)
     console.log "End"
-    return
+    return tf
 
   checkPointsInInequalities: (points, inequalities)->
     i = 0
@@ -214,15 +205,53 @@ module.exports = App.Gauss = Ember.Object.extend
       i++
     pointList.removeObjects(toRemove)
 
-  getIntersectionWithTargetFunctionAndOtherLines: (inequalities, targetFunctionInequality, points, lineList)->
+  checkTargetFunctionOnOptimalMax: (targetFunction, pointList)->
+    pointList = Ember.A(pointList)
+    isOptimal = yes
+    tfA = targetFunction.get 'A'
+    tfB = targetFunction.get 'B'
+    tfC = targetFunction.get 'C'
+    pointList.forEach (point) ->
+      if(isOptimal)
+        pointX = point.X()
+        tfY = ((-tfA / tfB * pointX) + (tfC / tfB))
+        tfY += 0.000001
+        if point.Y() > tfY
+          isOptimal = no
+        return
+      return
+    isOptimal
+
+  checkTargetFunctionOnOptimalMin: (targetFunction, pointList)->
+    pointList = Ember.A(pointList)
+    isOptimal = yes
+    tfA = targetFunction.get 'A'
+    tfB = targetFunction.get 'B'
+    tfC = targetFunction.get 'C'
+    pointList.forEach (point) ->
+      if(isOptimal)
+        pointX = point.X()
+        tfY = ((-tfA / tfB * pointX) + (tfC / tfB))
+        tfY += 0.000001
+        if point.Y() < tfY
+          isOptimal = no
+        return
+      return
+    isOptimal
+
+  findOptimalSolution: (inequalities, targetFunctionInequality, points, lineList)->
     self = @
+    isOptimal = yes
+    targetFunction = null
     tfA = parseFloat(targetFunctionInequality.get 'A')
     tfB = parseFloat(targetFunctionInequality.get 'B')
     tfC = 0
     intersections = Ember.A([])
     lines = Ember.A([])
-    points.forEach (point)->
+    i = 0
+    while i < points.length
       tfC = 0
+      point = points[i]
       x = parseFloat(point.X().toFixed(6))
       y = parseFloat(point.Y().toFixed(6))
       tfC = tfA * x + tfB * y
@@ -231,64 +260,15 @@ module.exports = App.Gauss = Ember.Object.extend
       tf.set 'B', tfB
       tf.set 'C', tfC
       tf.computeCoordinates(tfA, tfB, tfC)
-      #create new target function through current point
-      p = board.create("point", [
-        x
-        y
-      ],
-        visible: false
-      )
-      q = board.create("point", [
-        tf.get('X2')
-        tf.get('Y2')
-      ],
-        visible: false
-      )
-      l = board.create("line", [
-        p
-        q
-      ],
-        fixed: true
-        strokeWidth: 1
-        visible: false
-      )
-      board.update()
-      lines.pushObject(l)
-
-      #count the number of intersection and lines
-      lineList.forEach (obj)->
-        intersection = board.create('intersection', [l, obj, 0], {visible: false})
-        if intersection.X() >= 0 and intersection.Y() >= 0
-          check = intersections.findBy 'id', point.id
-          if check? and check.count?
-            check.count++
-          else
-            intersections.pushObject Ember.Object.create(
-              id: point.id
-              point: point
-              count: 1
-              pointOfIntersection: intersection
-              tf: l
-              X: ->
-                @point.X()
-
-              Y: ->
-                @point.Y()
-            )
-        else
-          intersection.remove()
-          window.board.removeObject(intersection)
-    @checkPointsInInequalities(intersections, inequalities)
-    target = Ember.A([])
-    intersections.forEach (obj)->
-      if obj.get('count') is 2
-        target.pushObject(obj)
-    console.log "Optimal solutions: X: " + target[0].X() + ", Y: " + target[0].Y()
-
-
+      isOptimal = self.checkTargetFunctionOnOptimalMax(tf, points)
+      if(isOptimal)
+        @set 'pointOptimalSolution', point
+        return tf
+      i++
     console.log "End getIntersectionWithTargetFunctionAndOtherLines"
     return
 
+  
 
 
       

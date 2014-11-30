@@ -29,6 +29,9 @@ module.exports = App.IndexController = Ember.ObjectController.extend
   selectedInequalities: null
   targetFunction: null
   targetFunctionLine: null
+  pointOptimalSolution: null
+  tfType: ""
+  tfTypes: Ember.A([{type:"max"}, {type:"min"}])
 
   linesObserver:(()->
     if this.get('controllers.application.currentPath') is "index"
@@ -100,7 +103,11 @@ module.exports = App.IndexController = Ember.ObjectController.extend
     findOptimalSolution: ()->
       self = @
       gauss = App.Gauss.create()
-      gauss.findOptimalSolutionUsingLine(@get('jsxLines'), @get('targetFunctionLine'), @get('axies.x'), @get('axies.y'), @get('lines'), @get('targetFunction'), @get('points'))
+      tf = gauss.findOptimalSolutionUsingLine(@get('jsxLines'), @get('targetFunctionLine'), @get('axies.x'), @get('axies.y'), @get('lines'), @get('targetFunction'), @get('points'), @get('tfType.type'))
+      if(tf?)
+        @set 'pointOptimalSolution', gauss.get('pointOptimalSolution')
+        @set('targetFunction', tf)
+      return
       # gauss.findOptimalSolution(@get('lines'), @get('targetFunction'))
 
 
