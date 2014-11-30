@@ -17,7 +17,7 @@ module.exports = App.IndexController = Ember.ObjectController.extend
   needs: ["application"]
   content: null
   newLine: App.LinePrototype.create()
-  signTypeList: Ember.A(['<=', '>=', '='])
+  signTypeList: Ember.A(['<=', '>='])
   lines: Ember.A([])
   jsxLines: Ember.A([])
   points: Ember.A([])
@@ -102,11 +102,16 @@ module.exports = App.IndexController = Ember.ObjectController.extend
 
     findOptimalSolution: ()->
       self = @
+      if(@get('points')? and @get('points.length') > 0)
+        @get('points').forEach (obj)->
+          obj.remove()
       gauss = App.Gauss.create()
       tf = gauss.findOptimalSolutionUsingLine(@get('jsxLines'), @get('targetFunctionLine'), @get('axies.x'), @get('axies.y'), @get('lines'), @get('targetFunction'), @get('points'), @get('tfType.type'))
       if(tf?)
         @set 'pointOptimalSolution', gauss.get('pointOptimalSolution')
         @set('targetFunction', tf)
+      else
+        alert("Оптимального решения нет")
       return
       # gauss.findOptimalSolution(@get('lines'), @get('targetFunction'))
 
